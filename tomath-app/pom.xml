@@ -10,7 +10,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>${parent.artifactId}-app</artifactId>
+    <artifactId>tomath-app</artifactId>
     <version>1.0</version>
 
     <build>
