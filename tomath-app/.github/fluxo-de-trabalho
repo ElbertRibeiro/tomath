@@ -1,0 +1,50 @@
+Fluxo de Trabalho no Git
+========================
+
+Primeiro faça o clone do repositório de desenvolvimento:
+$ git clone https://github.com/Norte-Tecnologia/ToMath.git
+
+1. Trabalhe em sua tarefa, continuamente comitando em intervalos regulares para manter 
+o rastro daquilo que você fez.
+
+$ git checkout -b nome_da_tarefa (Criando o Branch da sua Tarefa)
+
+2. Mantenha o branch local de sua tarefa atualizado com o branch remoto de desenvolvimento 
+com qualquer atualizações que a equipe fez.
+
+$ git checkout dev (Mude para o branch de desenvolvimento)
+$ git pull origin dev (Atualize o branch de desenvolvimento)
+$ git checkout nome_da_tarefa (Mude para o branch da sua tarefa)
+$ git rebase dev(faça rebase ref: http://git-scm.com/book/pt-br/Ramifica%C3%A7%C3%A3o-Branching-no-Git-Rebasing)
+
+ATENÇÃO: NO ÚLTIMO COMANDO (REBASE) PODE EXISTIR CONFLITOS, VOCÊ PRECISA CORRIGÍ-LOS ANTES DE CONTINUAR COM O REBASE. QUALQUER DÚVIDA FALE COM O SÉRGIO.
+
+3. Uma vez terminada a tarefa, junte todos os pequenos commits em um único commit.
+
+$ git rebase -i dev
+
+Quando seu editor abrir combine todos os commits é um único commit. Veja o exemplo abaixo:
+
+Original
+========
+ pick ae3a3dc Adding first part of new feature
+ pick 3c82ad8 Adding second part
+
+Como deve ficar
+===============
+ pick ae3a3dc Adding first part of new feature
+ squash 3c82ad8 Adding second part
+
+Atenção: Troque todos os "pick" por "squash" a partir da segunda linha
+
+4. Faça um merge entre o branch de sua tarefa com o branch de desenvolvimento local, depois 
+faça um push para o branch de desenvolvimento remoto.
+
+$ git checkout dev (Mude para o branch de desenvolvimento)
+$ git pull origin dev (Atualize o branch de desenvolvimento)
+$ git merge nome_da_tarefa (Junte as alterações do branch de sua tarefa com o de desenvolvimento)
+$ git push origin dev (Suba as alterações para o branch de desenvolvimento)
+
+5. Apague o branch local de sua tarefa quando ele não for mais necessário.
+
+$ git branch -d nome_da_tarefa
