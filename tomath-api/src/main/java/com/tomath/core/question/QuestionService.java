@@ -1,17 +1,14 @@
 package com.tomath.core.question;
 
 import com.tomath.core.exception.GenericException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service public class QuestionService {
 
-    final QuestionRepository questionRepository;
-
-    public QuestionService(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }
+    @Autowired QuestionRepository questionRepository;
 
     public List<Question> getQuestionList() {
         return questionRepository.findAll();
@@ -24,4 +21,8 @@ import java.util.List;
         return questionRepository.insert(question).getId();
     }
 
+    public void deleteQuestion(String id){
+        Question question = questionRepository.findQuestionById(id);
+        questionRepository.delete(question);
+    }
 }
