@@ -1,10 +1,9 @@
 export default {
-    experienceBar: '#FF0000',
-    buttonNext: '#4895EF',
-    buttonNextHouve: '#4CC9F0',
-    optionQuestion: '#D3D3D3',
-    naveBarHouve: '#FF0057',
-    closeLevel: '#FD0056',
-    text: '#FFFFFF',
-    backgroundQuestion: '#4895EF'
+    redWhite: '#FF0000',
+    blue: '#4895EF',
+    gray: '#D3D3D3',
+    pink: '#FF0057',
+    red: '#FD0056',
+    white: '#FFFFFF',
+    grayBlack: '#4895EF'
 };
