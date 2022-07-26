@@ -1,36 +1,91 @@
-import React from 'react';
-import AuthSession from 'expo-auth-session';
-import { View, Text, ImageBackground, Button} from 'react-native';
-import styles from './styles';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ImageBackground, Image, ActivityIndicator } from 'react-native';
+import { TextInput, Button } from 'react-native-paper';
 
+import styles from './styles';
+import colors from '../../styles/colors';
 import imagemFundo from '../../assets/png/backgroud_img.png';
 
-export function Login() {
-    async function handleSignIn(){
-       /* const CLIENT_ID = '539723624381-dltm4n0nelq00h2p6a6bkfdag5pip2k4.apps.googleusercontent.com';
-        const REDIRECT_URI='https://auth.expo.io/@wandersouza/tomath-app';
-        const RESPONSE_YPE='token';
-        const SCOPO = encodeURI('profile email');
+import api from '../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-        const autUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_YPE}&scope=${SCOPO}`;
-        await AuthSession.startAsync({autUrl});
-        navigation.navigate('ChooseProfile');*/
+export function Login({ navigation }) {
+
+  // 0 - careggando 1 - logado 2 - deslogado
+  const [deslogado, setDeslogado] = useState(0);
+  const [credenciais, setCredenciais] = useState({
+    nameUser: '',
+    email: '',
+    typeUser: ''
+  });
+
+  const checkLogin = async () => {
+    const user = await AsyncStorage.getItem('@user');
+    if (user) {
+      navigation.replace('Home');
+    } else {
+      setDeslogado(2);
     }
+  }
 
-  return(
+  const user = async () => {
+    try {
+      const response = await api.post('users/create', credenciais);
+      const res = response.data;
+
+      console.log(res);
+      alert('SUCESSO:' + 'Login criado. 😊👌')
+      if (res.error) {
+        alert(res.message)
+        return false;
+      }
+
+      await AsyncStorage.setItem('@user', JSON.stringify(res.usuario));
+      navigation.replace('Home');
+    } catch (error) {
+      alert('ERRO:' + 'Esse usuário(a) já existe. 😢')
+    }
+  }
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  return (
     <ImageBackground source={imagemFundo}>
-        <View>
-            <Text styles={styles.Text}>
-            Ao se cadastrar você estará concordando com os termos de uso.
-            </Text>     
-            <Button 
-                styles={styles.Button}
-                title='Entrar com Google'
-                icon='sociial-google'
-                onPress={handleSignIn}
-            />   
-        </View>    
-    </ImageBackground>
-  );
-}
+      <Image style={styles.logo} source={require('../../assets/png/Logo.png')} />
 
+      {deslogado === 0 && <ActivityIndicator color={colors.blue} size='large' />}
+      {deslogado === 2 && (<View style={styles.container}>
+        <TextInput
+          label='Nome'
+          activeUnderlineColor='#4895EF'
+          style={styles.email}
+          value={credenciais.nameUser}
+          onChangeText={(text) => setCredenciais({ ...credenciais, nameUser: text })}
+        />
+
+        <TextInput
+          label='email'
+          //secureTextEntry
+          activeUnderlineColor='#4895EF'
+          style={styles.senha}
+          value={credenciais.email}
+          onChangeText={(text) => setCredenciais({ ...credenciais, email: text })}
+        />
+
+        <Button
+          mode='contained'
+          style={styles.butaoLogin}
+          onPress={() => user()}>
+          Entrar
+        </Button>
+
+        <Text styles={styles.info}>
+          Ao se cadastrar você estará concordando com os termos de uso.
+        </Text>
+
+      </View>)}
+    </ImageBackground>
+  )
+};
